@@ -1,3 +1,4 @@
+import actors.KVStore.Join
 import actors.Persistence.Persist
 import actors.{Persistence, Replica}
 import actors.Replica.{Entry, Update}
@@ -17,11 +18,13 @@ class ReplicaSpec extends Specification {
 
   class Actors extends TestKit(ActorSystem("ReplicaSpec")) with Scope
 
-  "When given input thisisatest a SegmentationWebSocketActor" should {
-    "return a message containing this is a test" in new Actors {
+  "When a Replica is started a Join message" should {
+    "be send to the parent actor" in new Actors {
       new WithApplication {
         val probe = TestProbe()
 
+        val replica = system.actorOf(Replica.props(probe.ref, Persistence.props(false)))
+        probe.expectMsg(Join)
       }
     }
   }

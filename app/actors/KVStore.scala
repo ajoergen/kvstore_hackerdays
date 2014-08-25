@@ -21,7 +21,9 @@ class KVStore(n: Int) extends Actor {
   var pendingAcks = Map.empty[Long, (String, Long)]
 
   override def preStart(): Unit = {
-    for (i <- 0 until n) Replica.props(self, Persistence.props(false))
+    (0 until n).foreach { i =>
+      Replica.props(self, Persistence.props(false))
+    }
   }
 
   override def receive: Receive = {
