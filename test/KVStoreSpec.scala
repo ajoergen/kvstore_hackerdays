@@ -1,5 +1,5 @@
 import actors.KVStore
-import actors.KVStore.Join
+import actors.KVStore.{Replicas, Joined, Join}
 import akka.actor.ActorSystem
 import akka.testkit.{TestKit, TestProbe}
 import org.specs2.mutable.Specification
@@ -22,7 +22,9 @@ class KVStoreSpec extends Specification {
         val probe = TestProbe()
 
         val myActor = system.actorOf(KVStore.props(1))
-        probe.expectMsg(Join)
+        probe.send(myActor, Join)
+        probe.expectMsg(Replicas(Set(probe.ref)))
+        probe.expectMsg(Joined)
       }
     }
   }

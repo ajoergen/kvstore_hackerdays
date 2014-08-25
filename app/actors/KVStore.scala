@@ -1,7 +1,6 @@
 package actors
 
-import actors.Replica.Update
-import akka.actor.{Props, Actor, ActorRef}
+import akka.actor.{Actor, ActorRef, Props}
 
 object KVStore {
   case object Join
@@ -19,12 +18,6 @@ class KVStore(n: Int) extends Actor {
   var replicas = Set.empty[ActorRef]
   val idSequence = generateId(0).iterator
   var pendingAcks = Map.empty[Long, (String, Long)]
-
-  override def preStart(): Unit = {
-    (0 until n).foreach { i =>
-      Replica.props(self, Persistence.props(false))
-    }
-  }
 
   override def receive: Receive = {
     case Join =>
