@@ -1,0 +1,10 @@
+application.title = Spelling Corrector
+
+# Segmentation of entered text into words.
+segmentation.header = Text Segmentation
+segmentation.enter.label = Enter text
+segmentaiton.result.label = Most probable segmentation
+
+# Spellchecking labels
+spellchecking.header = Spell Checking
+spellchecking.enter.label = Enter text

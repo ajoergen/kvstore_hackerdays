@@ -1,0 +1,10 @@
+application.title = Stave Kontrollør
+
+
+segmentation.header = Orddeling
+segmentation.enter.label = Intast tekst
+segmentaiton.result.label = Mente du
+
+spellchecking.header = Stavekontrol
+spellchecking.enter.label = Intast tekst
+segmentation.result.label = Mente du

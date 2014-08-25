@@ -1,0 +1,19 @@
+@()(content: Html)(implicit flash: Flash, lang: Lang)
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+        <title>@Messages("application.title")</title>
+        <link rel="stylesheet" href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap.min.css"))'>
+        <link rel="stylesheet" href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-theme.min.css"))'>
+        <script type="text/javascript" src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+</head>
+<body>
+<div class="container">
+    @content
+</div>
+</body>
+
+</html>

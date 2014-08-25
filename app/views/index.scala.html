@@ -1,0 +1,40 @@
+@()(implicit lang: Lang, flash: Flash)
+
+@main() {
+<header><h3>@Messages("segmentation.header")</h3></header>
+<div class="row">
+    <div class="col-md-12">
+        <fieldset>
+            <label>@Messages("segmentation.enter.label"):</label>
+            <textarea class="form-control" rows="5" id="message"></textarea>
+
+        </fieldset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @Messages("segmentaiton.result.label"):
+        <div id="output"></div>
+    </div>
+</div>
+
+<header><h3>@Messages("spellchecking.header")</h3></header>
+<div class="row">
+    <div class="col-md-12">
+        <fieldset>
+            <label>@Messages("spellchecking.enter.label"):</label>
+            <textarea class="form-control" rows="5" id="message2"></textarea>
+        </fieldset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @Messages("segmentation.result.label"):
+        <div id="output2"></div>
+    </div>
+</div>
+<script type="text/javascript" src='@routes.Assets.at("javascripts/segmentation.js")'></script>
+<script type="text/javascript" src='@routes.Assets.at("javascripts/spelling.js")'></script>
+}

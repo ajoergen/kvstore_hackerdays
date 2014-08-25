@@ -1,0 +1,30 @@
+This is an application creating language models based on n-grams:
+=================================================================
+
+This is a application for doing a spellchecker based on a ngram model. It is using the play framework for
+generating the user interface, and giving acccess to the akka actor system. The application is based on the
+method described in [1]. This model has been scaled down to be able to run on a laptop by Peter Norvig [2], and
+this is where the data sets are taken from.
+
+Setup and run:
+==============
+Download typesafe activator from http://www.typesafe.com/activator and run the activator script in this directory.
+This will result in a sbt prmpt.
+
+[NGrams] $ update
+[NGrams] $ compile
+[NGrams] $ test # to run the tests
+[NGrams] $ run # to run the application in development mode defauls to http://localhost:9000
+
+The project is already setup for idea, but you will probably need the scala plugin. If you prefer eclipse just
+run
+
+[NGrams] $ eclipse
+
+at the prompt. Again you want the scala ide installed.
+
+Bibiography:
+============
+[1]: Whitelaw, Casey et. al.,2009, Proceedings of the 2009 Conference on Empirical Methods in Natural Language 
+     Processing, pages: 890-899
+[2]: Norvig, Peter, http://norvig.com/ngrams/
