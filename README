@@ -1,7 +1,6 @@
 This is an application creating language models based on n-grams:
 =================================================================
 
-
 This is a application for doing a spellchecker based on a ngram model. It is using the play framework for
 generating the user interface, and giving acccess to the akka actor system. The application is based on the
 method described in [1]. This model has been scaled down to be able to run on a laptop by Peter Norvig [2], and
