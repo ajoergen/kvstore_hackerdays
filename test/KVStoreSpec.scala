@@ -1,6 +1,5 @@
-import actors.Persistence.Persist
-import actors.{Persistence, Replica}
-import actors.Replica.{Entry, Update}
+import actors.KVStore
+import actors.KVStore.Join
 import akka.actor.ActorSystem
 import akka.testkit.{TestKit, TestProbe}
 import org.specs2.mutable.Specification
@@ -22,10 +21,8 @@ class KVStoreSpec extends Specification {
       new WithApplication {
         val probe = TestProbe()
 
-        val myActor = system.actorOf(Replica.props(Persistence.props(false)))
-        myActor ! Update("123", 123L)
-
-        probe.expectMsg(Persist(0, Entry("123", 123L)))
+        val myActor = system.actorOf(KVStore.props(1))
+        probe.expectMsg(Join)
       }
     }
   }

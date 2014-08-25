@@ -11,7 +11,7 @@ object KVStore {
   case class Put(key: String, value: Long)
   case class Ack(id: Long, key: String, value: Long)
 
-  def props(n: Int) = Props(classOf[KVStore], new KVStore(n))
+  def props(n: Int) = Props(new KVStore(n))
 }
 
 class KVStore(n: Int) extends Actor {

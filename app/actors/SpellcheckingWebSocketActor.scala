@@ -8,8 +8,8 @@ import scala.collection.mutable
 import scala.language.implicitConversions
 
 object SpellcheckingWebSocketActor {
-  val pdWord = new ProbabilityDistribution("/home/anjj/Projects/play/NGrams/public/resources/count_1w.txt", BigInt("1024908267229"), (w: String, n:BigInt) => 10./(n.toDouble*math.pow(10,w.length)))
-  val pdEdit = new ProbabilityDistribution("/home/anjj/Projects/play/NGrams/public/resources/count_1edit.txt")
+  val pdWord = new ProbabilityDistribution("public/resources/count_1w.txt", BigInt("1024908267229"), (w: String, n:BigInt) => 10./(n.toDouble*math.pow(10,w.length)))
+  val pdEdit = new ProbabilityDistribution("public/resources/count_1edit.txt")
   val prefixes = (for {
     w <- pdWord.keySet
     i <- 0 to w.size} yield w.slice(0,i)).toSet

@@ -74,8 +74,8 @@ trait BiGramTextSegmentation extends Segmentation {
  * WebSocket actor receiving events for the segmentation service.
  */
 object SegmentationWebSocketActor {
-  val dist = new ProbabilityDistribution("/home/anjj/Projects/play/NGrams/public/resources/count_1w.txt", BigInt("1024908267229"), (w: String, n:BigInt) => 10./(n.toDouble*math.pow(10,w.length)))
-  val dist2w = new ProbabilityDistribution("/home/anjj/Projects/play/NGrams/public/resources/count_2w.txt", BigInt("1024908267229"))
+  val dist = new ProbabilityDistribution("public/resources/count_1w.txt", BigInt("1024908267229"), (w: String, n:BigInt) => 10./(n.toDouble*math.pow(10,w.length)))
+  val dist2w = new ProbabilityDistribution("public/resources/count_2w.txt", BigInt("1024908267229"))
 
   def props(out: ActorRef) = {
     Props(new SegmentationWebSocketActor(out, dist, dist2w))

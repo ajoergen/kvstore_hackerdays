@@ -51,10 +51,9 @@ class Replica(val sentinel: ActorRef, val persistenceProps: Props, resendCount: 
   override def receive: Receive = {
     case Replicas(newReplicas) => replicas = newReplicas
     case Get(x) => sender() ! cache.get(x)
-    case Update(k,v) =>
+    case Update(id, k,v) =>
       cache.updated(k,v)
       // replcate k,v to everyone
-      val id = idFactory.next()
       persistence ! Persist(id, Entry(k,v))
       val t = (id,Entry(k,v))
       pendingPersistenceAcks += (t)

@@ -22,10 +22,6 @@ class ReplicaSpec extends Specification {
       new WithApplication {
         val probe = TestProbe()
 
-        val myActor = system.actorOf(Replica.props(Persistence.props(false)))
-        myActor ! Update("123", 123L)
-
-        probe.expectMsg(Persist(0, Entry("123", 123L)))
       }
     }
   }
