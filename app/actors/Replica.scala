@@ -10,7 +10,7 @@ object Replica {
     val id: Long
     val key: String
   }
-  case class GetValue(id: Long, key: String) extends Operation
+  case class GetValue(id: Long, key: String, replyTo : ActorRef) extends Operation
   case class Update(id: Long, key: String, value: Long) extends Operation
   case class Remove(id: Long, key: String) extends Operation
   case class Replicate(id: Long, key: String, value: Option[Long]) extends Operation
@@ -24,7 +24,7 @@ object Replica {
   case class Ack(id: Long, key: String, value: Option[Long], origin: ActorRef, target: ActorRef, operation: Operation) extends AckOperation
 
   sealed trait OperationReply
-  case class GetResult(id: Long, key: String, valueOption: Option[Long]) extends OperationReply
+  case class GetResult(id: Long, key: String, valueOption: Option[Long], replyTo: ActorRef) extends OperationReply
   case class OperationAck(id: Long) extends OperationReply
   case class OperationFailed(id: Long) extends OperationReply
 
@@ -82,6 +82,7 @@ class Replica(val sentinel: ActorRef, val persistenceProps: Props) extends Actor
     persistence ! p
     pendingAcks += ((id, key, persistence) -> Ack(id, key, valueOption, origin, persistence, p))
     checkForFailureEventually(id, key, persistence)
+
   }
 
   override def receive: Receive = handleKeyStoreOperations orElse {
@@ -112,6 +113,7 @@ class Replica(val sentinel: ActorRef, val persistenceProps: Props) extends Actor
           origin ! OperationFailed(id)
           val t = (id, key, origin)
           pendingAcks -= t
+        case None => //
       }
   }
 
@@ -120,7 +122,7 @@ class Replica(val sentinel: ActorRef, val persistenceProps: Props) extends Actor
   }
 
   private def handleKeyStoreOperations(): Receive = {
-    case GetValue(id, k) => sender() ! GetResult(id, k, cache.get(k))
+    case GetValue(id, k, replyTo) => sender() ! GetResult(id, k, cache.get(k), replyTo)
     case Update(id,k,v) =>
       updateKeyValueStore(k,Some(v))
       replicateNewValue(id, k, Some(v), self)
