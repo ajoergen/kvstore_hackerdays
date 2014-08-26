@@ -2,7 +2,7 @@ package actors
 
 import actors.KVStore.{Replicas, Join}
 import actors.Persistence.Persisted
-import akka.actor.{Props, ActorRef, Actor}
+import akka.actor.{ActorLogging, Props, ActorRef, Actor}
 import scala.concurrent.duration._
 
 object Replica {
@@ -10,7 +10,7 @@ object Replica {
     val id: Long
     val key: String
   }
-  case class Get(id: Long, key: String) extends Operation
+  case class GetValue(id: Long, key: String) extends Operation
   case class Update(id: Long, key: String, value: Long) extends Operation
   case class Remove(id: Long, key: String) extends Operation
   case class Replicate(id: Long, key: String, value: Option[Long]) extends Operation
@@ -33,7 +33,7 @@ object Replica {
   def props(sentinel: ActorRef, persistenceProps: Props): Props = Props(new Replica(sentinel, persistenceProps))
 }
 
-class Replica(val sentinel: ActorRef, val persistenceProps: Props) extends Actor {
+class Replica(val sentinel: ActorRef, val persistenceProps: Props) extends Actor with ActorLogging {
   import actors.Replica._
   import context.dispatcher
   import scala.language.postfixOps
@@ -120,7 +120,7 @@ class Replica(val sentinel: ActorRef, val persistenceProps: Props) extends Actor
   }
 
   private def handleKeyStoreOperations(): Receive = {
-    case Get(id, k) => sender() ! GetResult(id, k, cache.get(k))
+    case GetValue(id, k) => sender() ! GetResult(id, k, cache.get(k))
     case Update(id,k,v) =>
       updateKeyValueStore(k,Some(v))
       replicateNewValue(id, k, Some(v), self)
