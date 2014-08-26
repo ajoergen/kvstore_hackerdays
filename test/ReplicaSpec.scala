@@ -1,11 +1,12 @@
-import actors.KVStore.Join
-import actors.Replica.{GetResult, GetValue, Update}
+import actors.KVStore.{Replicas, Join}
+import actors.Replica._
 import actors.{Persistence, Replica}
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
 import akka.testkit.{TestKit, TestProbe}
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 import play.api.test.WithApplication
+import scala.language.postfixOps
 
 
 /**
@@ -53,6 +54,27 @@ class ReplicaSpec extends Specification {
         probe.send(replica, Update(1, "test", 42L))
         probe.send(replica, GetValue(2,  "test"))
         probe.expectMsg(GetResult(2, "test", Some(42L)))
+      }
+    }
+  }
+
+  "When a Replica receives an update the value" should {
+    "be replicated" in new Actors {
+      new WithApplication() {
+        val kvStore = TestProbe()
+
+        val replica = system.actorOf(Replica.props(kvStore.ref, Persistence.props(false)))
+        kvStore.expectMsg(Join)
+        val replicaProbe = TestProbe()
+        val replicas = Set(replica, replicaProbe.ref)
+        kvStore.send(replica, Replicas(replicas))
+
+        kvStore.send(replica, Update(1, "test", 42L))
+        kvStore.expectMsg(OperationAck(1))
+        (0 until 5).foreach { i =>
+          replicaProbe.expectMsg(Replicate(1, "test", Some(42L)))
+        }
+        replicaProbe.send(replica, Replicated(1, "test", Some(42L)))
       }
     }
   }

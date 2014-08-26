@@ -24,9 +24,7 @@ class KVStore(n: Int) extends Actor {
   var pendingAcks = Map.empty[Long, (String, Long)]
   var constistenHash: TreeMap[Long, ActorRef] = TreeMap.empty[Long, ActorRef]
 
-  def findReplica(key: String): ActorRef = {
-
-  }
+  def findReplica(key: String): ActorRef = ???
 
   override def receive: Receive = {
     case Join =>

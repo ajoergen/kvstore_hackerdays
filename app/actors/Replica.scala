@@ -109,9 +109,10 @@ class Replica(val sentinel: ActorRef, val persistenceProps: Props) extends Actor
     case CheckAckFailed(id, key, target) =>
       pendingAcks.get((id, key,target)) match {
         case Some(Ack(_,_,_,origin,_,_)) =>
-          origin ! OperationFailed(id)
+          target ! OperationFailed(id)
           val t = (id, key, origin)
           pendingAcks -= t
+        case None =>
       }
   }
 
