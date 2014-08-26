@@ -1,7 +1,6 @@
 import actors.KVStore.Join
-import actors.Persistence.Persist
+import actors.Replica.{GetResult, Get, Update}
 import actors.{Persistence, Replica}
-import actors.Replica.{Get, Entry, Update}
 import akka.actor.ActorSystem
 import akka.testkit.{TestKit, TestProbe}
 import org.specs2.mutable.Specification
@@ -37,8 +36,8 @@ class ReplicaSpec extends Specification {
         val replica = system.actorOf(Replica.props(probe.ref, Persistence.props(false)))
         probe.expectMsg(Join)
 
-        probe.send(replica, Get("test"))
-        probe.expectMsg(None)
+        probe.send(replica, Get(1, "test"))
+        probe.expectMsg(GetResult(1, "test", None))
       }
     }
   }
@@ -52,8 +51,8 @@ class ReplicaSpec extends Specification {
         probe.expectMsg(Join)
 
         probe.send(replica, Update(1, "test", 42L))
-        probe.send(replica, Get("test"))
-        probe.expectMsg(Some(42L))
+        probe.send(replica, Get(2,  "test"))
+        probe.expectMsg(GetResult(2, "test", Some(42L)))
       }
     }
   }
