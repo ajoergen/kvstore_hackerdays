@@ -2,7 +2,7 @@ package actors
 
 
 import actors.Replica.Persist
-import akka.actor.{Actor, Props}
+import akka.actor.{ActorLogging, Actor, Props}
 
 import scala.util.Random
 
@@ -14,13 +14,15 @@ object Persistence {
   def props(flaky: Boolean): Props = Props(classOf[Persistence], flaky)
 }
 
-class Persistence(flaky: Boolean) extends Actor {
+class Persistence(flaky: Boolean) extends Actor with ActorLogging {
   import actors.Persistence._
 
   def receive = {
     case Persist(id, key, valueOption) =>
-      if (!flaky || Random.nextBoolean()) sender ! Persisted(id: Long, key: String)
-      else throw new PersistenceException
+      if (!flaky || Random.nextInt(100) > 90)
+        sender ! Persisted(id: Long, key: String)
+      else
+        log.warning("persistence failed for [id:%d,key:%s]".format(id, key))
   }
 
 }
